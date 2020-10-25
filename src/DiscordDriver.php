@@ -112,11 +112,7 @@ class DiscordDriver implements DriverInterface
      */
     protected function isBot()
     {
-        if ($this->message == null) {
-            return false;
-        }
-
-        return $this->message->author->bot;
+        return $this->message->author->user->bot === true;
     }
 
     /**
