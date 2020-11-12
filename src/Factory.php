@@ -5,6 +5,7 @@ namespace BotMan\Drivers\Discord;
 use Discord\Discord;
 use BotMan\BotMan\BotMan;
 use Illuminate\Support\Collection;
+use Psr\Log\LoggerInterface;
 use React\EventLoop\LoopInterface;
 use BotMan\BotMan\Cache\ArrayCache;
 use BotMan\BotMan\Interfaces\CacheInterface;
@@ -18,19 +19,22 @@ class Factory
      *
      * @param array $config
      * @param LoopInterface $loop
-     * @param CacheInterface $cache
-     * @param StorageInterface $storageDriver
-     * @return \BotMan\BotMan\BotMan
+     * @param CacheInterface|null $cache
+     * @param StorageInterface|null $storageDriver
+     * @param LoggerInterface|null $logger
+     * @return void
      */
     public function createForDiscord(
         array $config,
         LoopInterface $loop,
         CacheInterface $cache = null,
-        StorageInterface $storageDriver = null
+        StorageInterface $storageDriver = null,
+        LoggerInterface $logger = null
     ) {
         $client = new Discord([
             'token' => Collection::make($config['discord'])->get('token'),
             'loop' => $loop,
+            'logger' => $logger,
         ]);
 
         return $this->createUsingDiscord($config, $client, $cache, $storageDriver);
